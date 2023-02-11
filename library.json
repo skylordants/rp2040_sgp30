@@ -15,7 +15,8 @@
     }
   ],
   "dependencies": {
-    "skylordants/rp2040_i2c": "https://github.com/skylordants/rp2040_i2c"
+    "skylordants/rp2040_i2c": "https://github.com/skylordants/rp2040_i2c",
+    "skylordants/rp2040_at93c46": "https://github.com/skylordants/rp2040_at93c46"
   },
   "license": "MIT",
   "frameworks": "*",
