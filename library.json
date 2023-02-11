@@ -1,0 +1,23 @@
+{
+  "name": "rp2040_sgp30",
+  "version": "0.0.1",
+  "description": "A library to use SGP30 sensor using the original SDK",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/skylordants/rp2040_sgp30.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Ants Kärner",
+      "email": "karner.ants@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "skylordants/rp2040_i2c": "https://github.com/skylordants/rp2040_i2c"
+  },
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*"
+}
