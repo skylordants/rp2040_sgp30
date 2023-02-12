@@ -1,3 +1,4 @@
+#include <cmath>
 #include <stdio.h>
 
 #include "pico/time.h"
@@ -150,11 +151,15 @@ bool SGP30::measure_air_quality() {
 }
 
 
-bool SGP30::set_humidity(uint16_t humidity) {
+bool SGP30::set_absolute_humidity(uint16_t humidity) {
 	uint8_t data[2] = {(uint8_t)(humidity>>8), (uint8_t)humidity};
 	write(SGP30_SET_HUMIDITY, data, 2);
 	sleep_ms(10);
 	return true;
+}
+
+bool SGP30::set_relative_humidity(double t, double RH) {
+	return set_absolute_humidity(AH_for_sgp30(t, RH));
 }
 
 
@@ -271,4 +276,34 @@ bool SGP30::eeprom_set_cal_time(uint64_t time) {
 	}
 
 	return true;
+}
+
+// Humidity calculations
+static const double a1 = -7.85951783;
+static const double a2 = 1.84408259;
+static const double a3 = -11.7866497;
+static const double a4 = 22.6807411;
+static const double a5 = -15.9618719;
+static const double a6 = 1.80122502;
+
+static const double Pc = 22064000;
+static const double Tc = 647.096;
+
+static const double Rw = 461.5;
+
+double SGP30::Ps (double T) {
+	double tau = 1-T/Tc;
+	double pol = Tc/T*(a1*tau + a2*pow(tau, 1.5) + a3*pow(tau, 3) + a4*pow(tau, 3.5) + a5*pow(tau, 4) + a6*pow(tau, 7));
+	return Pc*exp(pol);
+}
+
+// kg/m^3
+double SGP30::AH (double t, double RH) {
+	double T = t + 273.15;
+	return (RH*Ps(T))/(Rw*T*100);
+}
+
+uint16_t SGP30::AH_for_sgp30 (double t, double RH) {
+	double ah = AH(t, RH)*1000;
+	return (uint16_t) round(ah*256);
 }

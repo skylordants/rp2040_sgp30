@@ -17,7 +17,9 @@ public:
 	bool get_baseline(uint8_t baseline[]);
 
 	bool set_baseline(uint8_t baseline[]);
-	bool set_humidity(uint16_t humidity);
+
+	bool set_absolute_humidity(uint16_t humidity);
+	bool set_relative_humidity(double t, double RH);
 
 	uint16_t co2eq;
 	uint16_t tvoc;
@@ -42,6 +44,12 @@ private:
 
 	static const uint8_t crc_pol;
 	static uint8_t calculate_crc(uint8_t data_1, uint8_t data_2);
+
+	// Humidity calculations
+	double Ps (double T);
+	// kg/m^3
+	double AH (double t, double RH);
+	uint16_t AH_for_sgp30 (double t, double RH);
 };
 
 #endif
